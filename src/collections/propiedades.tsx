@@ -9,7 +9,7 @@ export interface Property {
   departments: string
   address: string
   description: string
-  main_image: string;
+  main_image: string[];
 }
 
 type PropertyType = 'Casa' | 'Apartamento'
@@ -69,11 +69,17 @@ export const realEstateCollection = buildCollection<Property>({
       dataType: 'string'
     },
     main_image: buildProperty({ // The `buildProperty` method is a utility function used for type checking
-      name: "Image",
-      dataType: "string",
-      storage: {
-        storagePath: "images",
-        acceptedFiles: ["image/*"]
+      name: "Imágenes",
+      dataType: "array",
+      of: {
+        dataType: 'string',
+        storage: {
+          storagePath: "images",
+          acceptedFiles: ["image/*"],
+          //   metadata: {
+          //     cacheControl: "max-age=1000000"
+          // }
+        }
       }
     }),
   },
