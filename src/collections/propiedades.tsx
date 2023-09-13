@@ -6,7 +6,7 @@ export interface Property {
   bathrooms: number
   category: PropertyType
   neighborhood: string
-  departments: string
+  department: string
   address: string
   description: string
   main_image: string[];
@@ -50,7 +50,7 @@ export const realEstateCollection = buildCollection<Property>({
       validation: { required: true },
       dataType: 'string'
     },
-    departments: {
+    department: {
       name: 'departamento',
       validation: { required: true },
       dataType: 'string'
