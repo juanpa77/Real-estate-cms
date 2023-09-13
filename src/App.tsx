@@ -1,6 +1,6 @@
 import { useCallback } from "react";
 
-import { useDataEnhancementPlugin } from "@firecms/data_enhancement";
+// import { useDataEnhancementPlugin } from "@firecms/data_enhancement";
 
 import { User as FirebaseUser } from "firebase/auth";
 import { Authenticator, FirebaseCMSApp } from "firecms";
@@ -34,16 +34,9 @@ export default function App() {
     }, []);
 
 
-    const dataEnhancementPlugin = useDataEnhancementPlugin({
-        // Paths that will be enhanced
-        getConfigForPath: ({ path }) => {
-            return true;
-        }
-    });
 
     return <FirebaseCMSApp
         name={"My Online Shop"}
-        plugins={[dataEnhancementPlugin]}
         authentication={myAuthenticator}
         collections={[productsCollection, realEstateCollection]}
         firebaseConfig={firebaseConfig}

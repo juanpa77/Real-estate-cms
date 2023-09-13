@@ -4,7 +4,7 @@ export interface Property {
   price: number
   rooms: number
   bathrooms: number
-  category: PropertyType[]
+  category: PropertyType
   neighborhood: string
   departments: string
   address: string
@@ -37,15 +37,12 @@ export const realEstateCollection = buildCollection<Property>({
     category: {
       name: 'category',
       validation: { required: true },
-      dataType: 'array',
-      of: {
-        dataType: 'string',
-        enumValues: {
-          casa: 'Casa',
-          apartamento: 'Apartamento',
-          localComercial: 'Local Comercial',
-          deposito: 'Deposito',
-        }
+      dataType: 'string',
+      enumValues: {
+        casa: 'Casa',
+        apartamento: 'Apartamento',
+        localComercial: 'Local Comercial',
+        deposito: 'Deposito',
       }
     },
     neighborhood: {
@@ -68,7 +65,8 @@ export const realEstateCollection = buildCollection<Property>({
       validation: { required: true },
       dataType: 'string'
     },
-    main_image: buildProperty({ // The `buildProperty` method is a utility function used for type checking
+    main_image: buildProperty({
+      // The `buildProperty` method is a utility function used for type checking
       name: "Imágenes",
       dataType: "array",
       of: {
@@ -76,6 +74,7 @@ export const realEstateCollection = buildCollection<Property>({
         storage: {
           storagePath: "images",
           acceptedFiles: ["image/*"],
+          storeUrl: true
           //   metadata: {
           //     cacheControl: "max-age=1000000"
           // }
