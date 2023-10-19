@@ -2,8 +2,12 @@ import { buildProperty, buildCollection, buildProperties } from "firecms"
 import { nanoid } from 'nanoid'
 interface Property {
   propertyOwner: PropertyOwner
-  price: number
+  data: PropertyData
   rooms: Rooms
+}
+
+type PropertyData = {
+  price: number
   category: PropertyType
   neighborhood: string
   department: string
@@ -29,8 +33,78 @@ type Room = {
 type Gallery = {
   imagesUrl: string[]
 }
-
 type PropertyType = 'Casa' | 'Apartamento'
+
+const propertyOwnerBuilder = () => {
+  return buildProperty<PropertyOwner>({
+    name: 'Propietario',
+    validation: { required: true },
+    dataType: 'map',
+    properties: {
+      name: {
+        name: 'Nombre',
+        dataType: 'string',
+      },
+      ci: {
+        name: 'C.I',
+        dataType: 'string',
+      },
+      secondaryPhone: {
+        name: 'celular',
+        dataType: 'number',
+      },
+      phone: {
+        name: 'Teléfono',
+        dataType: 'number',
+      },
+    }
+  })
+}
+
+const propertyBuilder = () => {
+  return buildProperty<PropertyData>({
+    name: 'datos',
+    dataType: 'map',
+    properties: {
+      price: {
+        name: "Precio",
+        validation: { required: true },
+        dataType: 'number'
+      },
+      category: {
+        name: 'category',
+        validation: { required: true },
+        dataType: 'string',
+        enumValues: {
+          casa: 'Casa',
+          apartamento: 'Apartamento',
+          localComercial: 'Local Comercial',
+          deposito: 'Deposito',
+        }
+      },
+      neighborhood: {
+        name: 'barrio',
+        validation: { required: true },
+        dataType: 'string'
+      },
+      department: {
+        name: 'departamento',
+        validation: { required: true },
+        dataType: 'string'
+      },
+      address: {
+        name: 'dirección',
+        validation: { required: true },
+        dataType: 'string'
+      },
+      description: {
+        name: 'descripción',
+        validation: { required: true },
+        dataType: 'string'
+      },
+    }
+  })
+}
 
 const listOfRooms = buildProperty<any>({
   dataType: "string",
@@ -60,26 +134,7 @@ const roomsPropertyBuilder = () => {
   })
 }
 
-const propertyOwnerBuilder = () => {
-  return buildProperties<PropertyOwner>({
-    name: {
-      name: 'Nombre',
-      dataType: 'string',
-    },
-    ci: {
-      name: 'C.I',
-      dataType: 'string',
-    },
-    secondaryPhone: {
-      name: 'celular',
-      dataType: 'number',
-    },
-    phone: {
-      name: 'Teléfono',
-      dataType: 'number',
-    },
-  })
-}
+
 
 const roomPropertyBuilder = () => {
   return buildProperties({
@@ -127,49 +182,9 @@ export const realEstateCollection = buildCollection<Property>({
   path: "Propiedades",
   group: "Inmobiliaria",
   properties: {
-    propertyOwner: {
-      name: 'Propietario',
-      validation: { required: true },
-      dataType: 'map',
-      properties: propertyOwnerBuilder(),
-    },
-    price: {
-      name: "Precio",
-      validation: { required: true },
-      dataType: 'number'
-    },
+    propertyOwner: propertyOwnerBuilder(),
+    data: propertyBuilder(),
     rooms: roomsPropertyBuilder(),
-    category: {
-      name: 'category',
-      validation: { required: true },
-      dataType: 'string',
-      enumValues: {
-        casa: 'Casa',
-        apartamento: 'Apartamento',
-        localComercial: 'Local Comercial',
-        deposito: 'Deposito',
-      }
-    },
-    neighborhood: {
-      name: 'barrio',
-      validation: { required: true },
-      dataType: 'string'
-    },
-    department: {
-      name: 'departamento',
-      validation: { required: true },
-      dataType: 'string'
-    },
-    address: {
-      name: 'dirección',
-      validation: { required: true },
-      dataType: 'string'
-    },
-    description: {
-      name: 'descripción',
-      validation: { required: true },
-      dataType: 'string'
-    },
   },
   callbacks: {
     onPreSave: (entitySaveProps) => {
