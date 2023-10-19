@@ -25,7 +25,6 @@ type PropertyOwner = {
 }
 
 type Room = {
-  id: string
   type: string
   gallery: Gallery[]
 }
@@ -106,19 +105,20 @@ const propertyBuilder = () => {
   })
 }
 
-const listOfRooms = buildProperty<any>({
+const listOfRooms = buildProperty({
   dataType: "string",
   enumValues: {
-    default: 'dormitorios',
-    dormitorios: 'dormitorios',
-    baños: 'baños',
+    default: 'dormitorio',
+    dormitorio: 'dormitorio',
+    baño: 'baño',
     cocina: 'cocina',
     comedor: 'comedor',
     garaje: 'garaje',
     living: 'living',
     livingComedor: 'livingComedor',
     exterior: 'exterior',
-  }
+  },
+  defaultValue: "exterior",
 });
 
 const roomsPropertyBuilder = () => {
@@ -126,53 +126,43 @@ const roomsPropertyBuilder = () => {
     name: 'Ambientes',
     validation: { required: true },
     dataType: 'array',
-    of: {
-      name: 'type de ambiente',
-      dataType: 'map',
-      properties: roomPropertyBuilder()
+    of: ({ values, index }) => {
+      return {
+        // name: 'type de ambiente',
+        dataType: 'map',
+        properties: roomPropertyBuilder(values?.rooms[index || 0]?.type)
+      }
     }
   })
 }
 
-
-
-const roomPropertyBuilder = () => {
-  return buildProperties({
-    id: {
-      name: "Revieifwed",
-      // Preview: CustomBooleanPreview
-      dataType: 'string',
-      // hideFromCollection: true,
-      // // readOnly: true,
-      defaultValue: 'nanoid(5)'
-    },
+const roomPropertyBuilder = (typeRoom: string | undefined) => {
+  return buildProperties<Room>({
     type: listOfRooms,
-    gallery: () => {
-      return ({
-        name: 'Galería',
-        dataType: 'array',
-        of: {
+    gallery: {
+      name: 'Galería de imágenes',
+      dataType: 'array',
+      of: ({ index }) => {
+        return {
+          name: `${typeRoom} ${(index || 0) + 1}`,
           spreadChildren: true,
           dataType: 'map',
-          properties: buildProperties({
-            imagesUrl: () => {
-              return {
-                name: '',
-                dataType: 'array',
-                of: {
-                  name: 'galleria',
-                  dataType: 'string',
-                  storage: {
-                    storagePath: "images",
-                    acceptedFiles: ["image/*"],
-                    storeUrl: true
-                  }
+          properties: buildProperties<Gallery>({
+            imagesUrl: {
+              name: `${typeRoom} ${(index || 0) + 1}`,
+              dataType: 'array',
+              of: {
+                dataType: 'string',
+                storage: {
+                  storagePath: "images",
+                  acceptedFiles: ["image/*"],
+                  storeUrl: true
                 }
               }
             }
           })
-        },
-      })
+        }
+      },
     },
   })
 }
@@ -183,8 +173,8 @@ export const realEstateCollection = buildCollection<Property>({
   group: "Inmobiliaria",
   properties: {
     propertyOwner: propertyOwnerBuilder(),
-    data: propertyBuilder(),
     rooms: roomsPropertyBuilder(),
+    data: propertyBuilder(),
   },
   callbacks: {
     onPreSave: (entitySaveProps) => {
