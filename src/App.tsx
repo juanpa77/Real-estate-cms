@@ -9,7 +9,6 @@ import "typeface-rubik";
 import "@fontsource/ibm-plex-mono";
 
 import { firebaseConfig } from "./firebase-config.ts";
-import { productsCollection } from "./collections/products.tsx";
 import { realEstateCollection } from "./collections/propiedades.tsx";
 
 export default function App() {
@@ -38,7 +37,7 @@ export default function App() {
     return <FirebaseCMSApp
         name={"My Online Shop"}
         authentication={myAuthenticator}
-        collections={[productsCollection, realEstateCollection]}
+        collections={[realEstateCollection]}
         firebaseConfig={firebaseConfig}
     />;
 }
