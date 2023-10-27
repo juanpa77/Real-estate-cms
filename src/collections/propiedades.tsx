@@ -1,6 +1,7 @@
 import { buildCollection, buildProperty } from "firecms"
 
 export interface Property {
+  transactionType: string
   price: number
   rooms: number
   bathrooms: number
@@ -19,6 +20,14 @@ export const realEstateCollection = buildCollection<Property>({
   path: "Propiedades",
   group: "Inmobiliaria",
   properties: {
+    transactionType: {
+      dataType: 'string',
+      name: 'Tipo de transacción',
+      enumValues: {
+        sale: 'venta',
+        rent: 'alquiler',
+      }
+    },
     price: {
       name: "Precio",
       validation: { required: true },
