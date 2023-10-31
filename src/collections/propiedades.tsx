@@ -182,8 +182,8 @@ export const realEstateCollection = buildCollection<Property>({
   group: "Inmobiliaria",
   properties: {
     propertyOwner: propertyOwnerBuilder(),
-    rooms: roomsPropertyBuilder(),
     data: propertyBuilder(),
+    rooms: roomsPropertyBuilder(),
   },
   callbacks: {
     onPreSave: (entitySaveProps) => {
